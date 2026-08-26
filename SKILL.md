@@ -3,6 +3,31 @@ name: reality-check
 description: Run a homepage Reality Check. Is this page a real product or a demo in costume? Returns one verdict, exactly three fixes ranked by damage, and what must not be touched. Use when the user asks to check a homepage, landing page, or site for clarity, fake-working components, generic claims, missing primary action, production readiness of the first screen, "reality check", "bdikat metziut", or "ma shavur baamud harishon". Do NOT use for full SEO, security, accessibility, or redesign audits.
 license: MIT
 compatibility: Needs live URL or pasted above-the-fold copy. Works with Claude Code, Claude.ai, Cursor.
+metadata:
+  version: "1.0.0"
+  author: Studio Haim
+  category: marketing-growth
+  display_name:
+    he: בדיקת מציאות לעמוד הבית
+    en: Homepage Reality Check
+  display_description:
+    he: אבחון עמוד בית - מוצר אמיתי או דמו מלוטש. מחזיר פסק דין אחד, בדיוק 3 תיקונים לפי נזק, ומה לא לגעת בו. לא SEO, לא נגישות, לא רידיזיין.
+    en: Diagnose a homepage - real product or polished demo. Returns one verdict, exactly three damage-ranked fixes, and what must not be touched. Not for SEO, accessibility, or redesign audits.
+  tags:
+    he:
+      - בדיקת-אתר
+      - עמוד-הבית
+      - חוויית-משתמש
+      - בהירות-מוצר
+      - הנעה-לפעולה
+      - וייב-קודינג
+    en:
+      - website-audit
+      - homepage
+      - ux
+      - product-clarity
+      - cta
+      - vibe-coding
 ---
 # Reality Check
 
