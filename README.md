@@ -14,7 +14,7 @@ v1 covers the homepage / primary landing page only. It does not run SEO, securit
 
 ## Install
 
-Copy the `reality-check/` folder into your agent's skills directory.
+This repository **is** the skill. Copy the repo (or just `SKILL.md` + `metadata.json` + `SKILL_HE.md`) into your agent's skills directory as a folder named `reality-check`.
 
 Triggers include "reality check", "bdikat metziut", and "ma shavur baamud harishon".
 
