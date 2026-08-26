@@ -1,0 +1,40 @@
+{
+  "author": "Studio Haim",
+  "version": "1.0.0",
+  "category": "marketing-growth",
+  "tags": {
+    "he": [
+      "בדיקת-אתר",
+      "עמוד-הבית",
+      "חוויית-משתמש",
+      "בהירות-מוצר",
+      "הנעה-לפעולה",
+      "וייב-קודינג"
+    ],
+    "en": [
+      "website-audit",
+      "homepage",
+      "ux",
+      "product-clarity",
+      "cta",
+      "vibe-coding"
+    ]
+  },
+  "display_name": {
+    "he": "בדיקת מציאות לעמוד הבית",
+    "en": "Homepage Reality Check"
+  },
+  "display_description": {
+    "he": "אבחון עמוד בית: מוצר אמיתי או דמו מלוטש. מחזיר פסק דין אחד, בדיוק 3 תיקונים לפי נזק, ומה לא לגעת בו. לא SEO, לא נגישות, לא רידיזיין.",
+    "en": "Diagnose a homepage: real product or polished demo. Returns one verdict, exactly three damage-ranked fixes, and what must not be touched. Not for SEO, accessibility, or redesign audits."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "gemini-cli"
+  ]
+}
