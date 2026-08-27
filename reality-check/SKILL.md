@@ -2,7 +2,7 @@
 name: reality-check
 description: Run a homepage Reality Check. Is this page a real product or a demo in costume? Returns one verdict, exactly three fixes ranked by damage, and what must not be touched. Use when the user asks to check a homepage, landing page, or site for clarity, fake-working components, generic claims, missing primary action, production readiness of the first screen, "reality check", "bdikat metziut", or "ma shavur baamud harishon". Do NOT use for full SEO, security, accessibility, or redesign audits.
 license: MIT
-compatibility: Needs live URL or pasted above-the-fold copy. Works with Claude Code, Claude.ai, Cursor.
+compatibility: Needs a live URL, screenshot, or pasted above-the-fold copy. Tested with Codex and Grok; designed to work with Claude and other agents that support skill folders.
 ---
 # Reality Check
 

@@ -18,6 +18,10 @@ v1 covers the homepage / primary landing page only. It does not run SEO, securit
 
 You can also clone or copy the repository manually. The skill folder contains `SKILL.md`, `metadata.json`, and `SKILL_HE.md`.
 
+## Compatibility
+
+Tested with Codex and Grok. Designed to work with Claude and other agents that support skill folders.
+
 Triggers include "reality check", "bdikat metziut", and "ma shavur baamud harishon".
 
 ## License
