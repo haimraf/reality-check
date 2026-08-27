@@ -35,6 +35,7 @@
     "windsurf",
     "opencode",
     "codex",
-    "gemini-cli"
+    "gemini-cli",
+    "grok"
   ]
 }
