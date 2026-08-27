@@ -14,11 +14,9 @@ v1 covers the homepage / primary landing page only. It does not run SEO, securit
 
 ## Install
 
-```bash
-npx skills-il add https://github.com/haimraf/reality-check
-```
+[Download the repository as a ZIP](https://github.com/haimraf/reality-check/archive/refs/heads/main.zip), extract it, and copy the `reality-check` folder into your agent's skills directory.
 
-This installs the skill directly from this GitHub repository. You can also copy the repo (or just `SKILL.md` + `metadata.json` + `SKILL_HE.md`) into your agent's skills directory as a folder named `reality-check`.
+You can also clone or copy the repository manually. The skill folder contains `SKILL.md`, `metadata.json`, and `SKILL_HE.md`.
 
 Triggers include "reality check", "bdikat metziut", and "ma shavur baamud harishon".
 
