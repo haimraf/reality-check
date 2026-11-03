@@ -2,7 +2,7 @@
 
 All notable changes to the Reality Check skill. Versions follow [Semantic Versioning](https://semver.org/). A version is released when its `v` tag is pushed; the release workflow then attests `SKILL.md`, `SKILL_HE.md`, and `metadata.json`.
 
-## [1.1.0] - Unreleased
+## [1.1.0] - 2026-11-03
 
 Same core: one verdict, exactly three damage-ranked fixes, 1-3 locked elements.
 
