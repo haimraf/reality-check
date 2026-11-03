@@ -4,14 +4,19 @@ Check one agent output, optionally against a regression case:
 
     python3 tests/check_output.py my-run.md --case tests/cases/03-en-dead-controls-screenshot
 
-Check every case (each expected.md must pass, each counterexample-*.md must fail)
-and every contract sample (valid-*.md must pass, invalid-*.md must fail):
+Check every case and contract sample:
 
     python3 tests/check_output.py --all
 
-Hard problems (exit code 1) are contract breaks and mechanical case
-expectations. Soft problems are printed as WARN: wording an agent may
-legitimately phrase differently, worth a human look.
+In a case folder, expected.md and alt-*.md must pass with no warnings,
+counterexample-*.md must fail, and blocked-*.md must come out BLOCKED.
+In tests/contract-samples, valid-*.md must pass and invalid-*.md must fail.
+
+Statuses: PASS (exit 0); FAIL (exit 1), a contract break or a mechanical case
+expectation; BLOCKED (exit 2), a case that needs a live interaction the
+agent's environment could not provide. BLOCKED never counts as a pass. WARN
+lines are wording an agent may legitimately phrase differently, worth a
+human look.
 """
 
 import argparse
@@ -24,6 +29,33 @@ from pathlib import Path
 TESTS = Path(__file__).resolve().parent
 CONTRACT = json.loads((TESTS / "contract.json").read_text(encoding="utf-8"))
 LABELS = CONTRACT["labels"]
+
+# The template writes "what - why - how" with a hyphen. Agents often typeset it as an
+# en or em dash; the parts are what the contract needs, so any spaced dash counts.
+# Colons, commas, or no separator still fail.
+SEPARATOR = re.compile(r"\s[-\u2013\u2014]\s")
+# Words before a phrase that make it a denial or a condition, not a claim:
+# "nothing proves that it is fake", "if it is dead".
+NOT_A_CLAIM = re.compile(r"\b(not|no|nothing|never|cannot|can't|isn't|doesn't|without|whether|if|unless|nor)\b|(^|\s)(לא|אין|אם)(?=\s)", re.I)
+
+
+def asserts(text, phrase):
+    """True when phrase appears in a clause with no denial or condition before it."""
+    phrase = phrase.lower()
+    for clause in re.split(r"[.;!?\n]|\bbut\b", text, flags=re.I):
+        low = clause.lower()
+        start = low.find(phrase)
+        while start != -1:
+            if not NOT_A_CLAIM.search(clause[:start]):
+                return True
+            start = low.find(phrase, start + 1)
+    return False
+
+
+def not_checked_clause(basis, lab):
+    """True when the basis line says what was not checked, followed by some content."""
+    variants = "|".join(re.escape(v) for v in lab["not_checked_variants"])
+    return re.search(rf"({variants})[^\s:]*\s*:?\s*[^\s:]", basis, re.I) is not None
 
 
 class _Text(HTMLParser):
@@ -105,8 +137,11 @@ def check_output(text, case=None):
         # The stop template is "Basis: [what was received]": an unreachable URL or a login wall is free text.
         if not basis[len(lab["basis_prefix"]):].strip():
             hard.append("stop output must say what was received on the basis line")
-    elif not any(value in basis for value in lab["basis_values"]):
-        hard.append(f"basis line must name the input: one of {lab['basis_values']}")
+    else:
+        if not any(value in basis for value in lab["basis_values"]):
+            hard.append(f"basis line must name the input: one of {lab['basis_values']}")
+        if not not_checked_clause(basis, lab):
+            hard.append(f"basis line must say what was not checked ('{lab['not_checked']} ...')")
 
     if is_stop:
         if len(headings) != 1:
@@ -150,7 +185,7 @@ def check_output(text, case=None):
                 hard.append(f"fix must start with an evidence tag {list(lab['tags'].values())}: '{content[:60]}'")
                 continue
             tags_used.append(tag_by_value[tag])
-            if content.count(" - ") < 2:
+            if len(SEPARATOR.findall(content)) < 2:
                 hard.append(f"fix must read 'what - why it hurts - how': '{content[:60]}'")
             if tag_by_value[tag] == "assumed" and not any(w in content.lower() for w in lab["check_words"]):
                 hard.append(f"an assumed fix must be phrased as a check ({lab['check_words']}): '{content[:60]}'")
@@ -160,7 +195,7 @@ def check_output(text, case=None):
         if not 1 <= len(bullets) <= 3 or len(bullets) != len(locked):
             hard.append(f"'{lab['headings'][2]}' must hold 1-3 bullet lines, found {len(bullets)} of {len(locked)} lines")
         for line in bullets:
-            if " - " not in line[2:]:
+            if not SEPARATOR.search(line[2:]):
                 hard.append(f"locked element must read 'element - why lock it': '{line[:60]}'")
 
         why = [line for line in sections.get(lab["headings"][3], []) if line.strip()]
@@ -172,9 +207,18 @@ def check_output(text, case=None):
         if lab["verdicts"]["no"] == verdict and tags_used and set(tags_used) == {"assumed"}:
             hard.append(f"'{verdict}' cannot rest on assumptions alone")
     info["tags"] = tags_used
+    info["status"] = "FAIL" if hard else "PASS"
 
     if case:
         expect = case["expect"]
+        if case.get("needs_interaction"):
+            wanted = [LABELS[lang]["basis_values"][i] for i in expect.get("basis", [])]
+            if info["outcome"] == "stop" or not (basis and any(v in basis for v in wanted)):
+                # The agent could not load or click the page. That is the environment, not a pass.
+                if not hard:
+                    info["status"] = "BLOCKED"
+                    soft.append(f"BLOCKED: this case needs {wanted} and the output says the page was not exercised; rerun where a browser can reach the local server")
+                return hard, soft, info
         if expect.get("outcome") and expect["outcome"] != info["outcome"]:
             hard.append(f"case expects outcome '{expect['outcome']}', got '{info['outcome']}'")
         if "verdict_in" in expect and info["outcome"] == "report":
@@ -197,7 +241,7 @@ def check_output(text, case=None):
             if phrase.lower() in text.lower():
                 hard.append(f"must not contain '{phrase}'")
         for phrase in expect.get("should_not_contain", []):
-            if phrase.lower() in text.lower():
+            if asserts(text, phrase):
                 soft.append(f"reads as a stated fact for this input: '{phrase}'")
         for group in expect.get("should_contain_any", []):
             if not any(phrase.lower() in text.lower() for phrase in group):
@@ -210,6 +254,7 @@ def check_output(text, case=None):
             invented = sorted(numbers_in(body) - allowed)
             if invented:
                 hard.append(f"numbers not found in the page: {invented}")
+    info["status"] = "FAIL" if hard else "PASS"
     return hard, soft, info
 
 
@@ -232,12 +277,18 @@ def run_all():
     cases = sorted(p for p in (TESTS / "cases").iterdir() if (p / "case.json").exists())
     for case_dir in cases:
         case = load_case(case_dir)
-        expected = case_dir / "expected.md"
-        hard, soft, info = check_output(expected.read_text(encoding="utf-8"), case)
-        status = "ok" if not hard else "FAIL"
-        print(f"{status:4} {case_dir.name}/expected.md ({info['outcome']}, {info.get('verdict', '-')}, tags {info['tags']})")
-        report("expected", hard, soft)
-        ok &= not hard
+        # The reference answer and hand-written alternatives must pass with no warnings.
+        for answer in [case_dir / "expected.md"] + sorted(case_dir.glob("alt-*.md")):
+            hard, soft, info = check_output(answer.read_text(encoding="utf-8"), case)
+            good = info["status"] == "PASS" and not soft
+            print(f"{'ok' if good else 'FAIL':4} {case_dir.name}/{answer.name} ({info['outcome']}, {info.get('verdict', '-')}, tags {info['tags']})")
+            report(answer.name, hard, soft)
+            ok &= good
+        for blocked in sorted(case_dir.glob("blocked-*.md")):
+            hard, soft, info = check_output(blocked.read_text(encoding="utf-8"), case)
+            good = info["status"] == "BLOCKED"
+            print(f"{'ok' if good else 'FAIL':4} {case_dir.name}/{blocked.name} is {info['status']}")
+            ok &= good
         for counter in sorted(case_dir.glob("counterexample-*.md")):
             hard, _, _ = check_output(counter.read_text(encoding="utf-8"), case)
             caught = bool(hard)
@@ -268,8 +319,8 @@ def main():
     case = load_case(args.case) if args.case else None
     hard, soft, info = check_output(Path(args.output).read_text(encoding="utf-8"), case)
     report(Path(args.output).name, hard, soft)
-    print(f"{'PASS' if not hard else 'FAIL'}: {info}")
-    return 0 if not hard else 1
+    print(f"{info['status']}: {info}")
+    return {"PASS": 0, "FAIL": 1, "BLOCKED": 2}[info["status"]]
 
 
 if __name__ == "__main__":

@@ -97,7 +97,7 @@ npx mcprush@latest skill add haimraf/reality-check
 
 ## בדיקות
 
-ההוראות המלאות ב-[README באנגלית](README.md#testing). בקצרה: `python3 tests/check_package.py` בודק את החבילה, ו-`python3 tests/check_output.py --all` בודק את מקרי הרגרסיה.
+ההוראות המלאות ב-[README באנגלית](README.md#testing). בקצרה: `python3 tests/check_package.py` בודק את החבילה, `python3 tests/check_output.py --all` בודק את מקרי הרגרסיה, ו-`python3 -m unittest discover -s tests -p "test_*.py"` בודק את הבודק עצמו. תוצאה `BLOCKED` פירושה שהסביבה לא אפשרה את האינטראקציה שהמקרה דורש (למשל מקרה 02 בלי דפדפן), והיא אף פעם לא נחשבת הצלחה.
 
 ## רישיון
 

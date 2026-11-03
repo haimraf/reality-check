@@ -111,7 +111,7 @@ Field names below are descriptive. Match each to the field Studio actually shows
 
 Each step needs Haim's explicit approval before it is taken.
 
-1. Run cases 01-05 in Codex and Grok (README, section Testing). Save each answer and check it with `python3 tests/check_output.py answer.md --case tests/cases/<case>`. Record the results on PR #2.
+1. Run cases 01-05 in Codex and Grok (README, section Testing). Save each answer and check it with `python3 tests/check_output.py answer.md --case tests/cases/<case>`. Record the results on PR #2. A `BLOCKED` result (case 02 without a browser that can reach the local server) is not a pass: rerun it where a browser works.
 2. Merge PR #2 into `main` through GitHub, with CI green.
 3. Create tag `v1.1.0` on `main`. The existing `release.yml` attests `SKILL.md`, `SKILL_HE.md`, and `metadata.json`.
 4. Optionally publish a GitHub Release from that tag, using the 1.1.0 changelog entry. Change `## [1.1.0] - Unreleased` to the release date in a follow-up commit.

@@ -16,6 +16,7 @@ Same core: one verdict, exactly three damage-ranked fixes, 1-3 locked elements.
 - Hebrew-script triggers in the description, plus "ready to go live" / "האם אפשר לעלות לאוויר".
 - `README.he.md`, a Hebrew README.
 - Regression harness in `tests/`: package checks, an output checker, five cases with real inputs and reference outputs, counterexamples that must be rejected, and a trigger eval set. CI runs it on every pull request.
+- The output checker accepts a hyphen, en dash, or em dash between the parts of a fix, requires the `not checked:` clause on report Basis lines, ignores denied or conditional phrases in its wording warnings, and reports a case that needs a browser as `BLOCKED` (never a pass) when the agent could not load or click the page. Unit tests cover each of these.
 
 ### Changed
 

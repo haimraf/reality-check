@@ -100,7 +100,7 @@ For Claude Desktop or claude.ai, zip the `reality-check` folder and upload it as
 
 ## Testing
 
-Both checks use only the Python standard library:
+All checks use only the Python standard library:
 
 ```bash
 python3 tests/check_package.py
@@ -110,7 +110,11 @@ python3 tests/check_package.py
 python3 tests/check_output.py --all
 ```
 
-`check_package.py` verifies that both copies are identical, the frontmatter is flat and within limits, triggers and labels agree across the skill, its Hebrew translation, and both READMEs, the core rules are still present, and the `SKILL.md` body stays within its size budget. `check_output.py --all` checks that each case's reference output passes the contract and that each counterexample is rejected.
+```bash
+python3 -m unittest discover -s tests -p "test_*.py"
+```
+
+`check_package.py` verifies that both copies are identical, the frontmatter is flat and within limits, triggers and labels agree across the skill, its Hebrew translation, and both READMEs, the core rules are still present, and the `SKILL.md` body stays within its size budget. `check_output.py --all` checks every case folder: `expected.md` and `alt-*.md` (other valid answers) must pass with no warnings, `counterexample-*.md` must fail, and `blocked-*.md` must come out BLOCKED. The unit tests cover the checker's own edge cases.
 
 To run a case against a real agent, give it the case's prompt and input (see `case.json` in each folder), save the answer, and check it:
 
@@ -118,7 +122,7 @@ To run a case against a real agent, give it the case's prompt and input (see `ca
 python3 tests/check_output.py answer.md --case tests/cases/03-en-dead-controls-screenshot
 ```
 
-`FAIL` lines are contract breaks. `WARN` lines are wording worth a human look. `tests/triggers.json` lists prompts that should and should not activate the skill; run them by hand in each agent, since activation depends on the agent.
+The result is `PASS` (exit 0), `FAIL` (exit 1, a contract break or a mechanical case expectation), or `BLOCKED` (exit 2). `BLOCKED` means the case needs a live interaction the agent's environment could not provide, such as case 02 without a browser that can reach the local server. It never counts as a pass. `WARN` lines are wording worth a human look. Fix separators may be a hyphen, en dash, or em dash. `tests/triggers.json` lists prompts that should and should not activate the skill; run them by hand in each agent, since activation depends on the agent.
 
 ## License
 

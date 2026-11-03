@@ -1,6 +1,7 @@
 {
   "id": "02-en-dead-controls-live",
   "title": "Clear product, dead primary path, checked on the live page",
+  "needs_interaction": true,
   "input": {
     "mode": "live page, interacted",
     "how": "python3 -m http.server 8765 -d tests/cases/02-en-dead-controls-live, then give the agent a browser tool",

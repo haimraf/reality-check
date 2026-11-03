@@ -22,9 +22,6 @@
     "forbidden_tags": [
       "verified"
     ],
-    "required_tags": [
-      "assumed"
-    ],
     "must_not_contain": [
       "404"
     ],
@@ -45,5 +42,6 @@
       "is fake",
       "is static"
     ]
-  }
+  },
+  "note": "SKILL.md does not require an [assumed] fix for a screenshot. The disclosure that controls were not tested is the 'not checked' clause on the Basis line, which the contract enforces. An answer with only [observed] fixes is valid (see alt-observed-only.md)."
 }

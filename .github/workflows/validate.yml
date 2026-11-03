@@ -24,6 +24,9 @@ jobs:
       - name: Regression cases
         run: python3 tests/check_output.py --all
 
+      - name: Checker unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
       - name: Agent Skills spec (skills-ref)
         run: |
           python3 -m pip install --quiet skills-ref==0.1.1
