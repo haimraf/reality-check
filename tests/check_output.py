@@ -4,7 +4,8 @@ Check one agent output, optionally against a regression case:
 
     python3 tests/check_output.py my-run.md --case tests/cases/03-en-dead-controls-screenshot
 
-Check every case: each expected.md must pass and each counterexample-*.md must fail:
+Check every case (each expected.md must pass, each counterexample-*.md must fail)
+and every contract sample (valid-*.md must pass, invalid-*.md must fail):
 
     python3 tests/check_output.py --all
 
@@ -94,15 +95,18 @@ def check_output(text, case=None):
     if not nonempty or not nonempty[0].startswith("# Reality Check"):
         hard.append("first line must be '# Reality Check - [site or URL]'")
     basis = next((line for line in nonempty[:3] if line.startswith(lab["basis_prefix"])), None)
-    if basis is None:
-        hard.append(f"missing '{lab['basis_prefix']}' line right under the title")
-    elif not any(value in basis for value in lab["basis_values"]):
-        hard.append(f"basis line must name the input: one of {lab['basis_values']}")
-    info["basis"] = basis
-
     headings = [line for line in lines if re.match(r"^#{1,6} ", line)]
     is_stop = any(line.startswith(lab["stop"]) for line in nonempty)
+    info["basis"] = basis
     info["outcome"] = "stop" if is_stop else "report"
+    if basis is None:
+        hard.append(f"missing '{lab['basis_prefix']}' line right under the title")
+    elif is_stop:
+        # The stop template is "Basis: [what was received]": an unreachable URL or a login wall is free text.
+        if not basis[len(lab["basis_prefix"]):].strip():
+            hard.append("stop output must say what was received on the basis line")
+    elif not any(value in basis for value in lab["basis_values"]):
+        hard.append(f"basis line must name the input: one of {lab['basis_values']}")
 
     if is_stop:
         if len(headings) != 1:
@@ -239,6 +243,14 @@ def run_all():
             caught = bool(hard)
             print(f"{'ok' if caught else 'FAIL':4} {case_dir.name}/{counter.name} rejected: {hard[0] if hard else 'NOT REJECTED'}")
             ok &= caught
+    # Contract edge cases with no case expectations: valid-*.md must pass, invalid-*.md must fail.
+    for sample in sorted((TESTS / "contract-samples").glob("*.md")):
+        hard, _, _ = check_output(sample.read_text(encoding="utf-8"))
+        want_pass = sample.name.startswith("valid-")
+        good = (not hard) if want_pass else bool(hard)
+        detail = ("passes" if not hard else hard[0]) if want_pass else ("rejected: " + hard[0] if hard else "NOT REJECTED")
+        print(f"{'ok' if good else 'FAIL':4} contract-samples/{sample.name} {detail}")
+        ok &= good
     print("OK: all cases behave as expected" if ok else "FAIL: see above")
     return 0 if ok else 1
 

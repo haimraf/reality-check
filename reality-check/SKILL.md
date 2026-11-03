@@ -45,6 +45,7 @@ Tag every fix with its evidence:
 Evidence rules:
 
 - Saying a control, link, form, or widget is dead, broken, static, or leads nowhere needs [verified]; from a screenshot or pasted copy it is [assumed] at most. Visible signs (placeholder text, "Lorem ipsum", "Coming soon" on a live-looking control) are [observed].
+- Numbers that stay the same across reloads do not prove a widget is static; a real daily total can hold still. [verified] needs the data source: values hard-coded in the HTML with no request behind them.
 - Calling testimonials, logos, or numbers fabricated needs visible signs; otherwise [assumed].
 - "Do not ship" needs at least one [verified] or [observed] finding, never assumptions alone.
 

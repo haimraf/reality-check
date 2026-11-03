@@ -8,7 +8,7 @@ The product is clear, but the only primary action does nothing and the live pane
 
 ## Top 3 fixes
 1. [verified] "Start free trial" goes nowhere (the URL gains a # and the page stays put) - the one primary action dies at the moment of intent - connect it to a working signup, or remove it until one exists.
-2. [verified] The "LIVE ACROSS SHIFTLY" panel is static ("1,284 shifts filled today" and "312 swaps approved" were identical across two reloads) - a staged live widget makes the rest of the page look staged too - connect it to real data or drop the LIVE label and the pulsing dot.
+2. [verified] The "LIVE ACROSS SHIFTLY" panel is static ("1,284 shifts filled today" and "312 swaps approved" are hard-coded in the page HTML, and the page makes no data request) - a staged live widget makes the rest of the page look staged too - connect it to real data or drop the LIVE label and the pulsing dot.
 3. [verified] "Pricing" in the nav returns 404 - visitors who check cost before a trial hit a dead end - point it at real pricing or take it out of the nav.
 
 ## Do not touch

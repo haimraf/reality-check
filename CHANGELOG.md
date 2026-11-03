@@ -21,10 +21,11 @@ Same core: one verdict, exactly three damage-ranked fixes, 1-3 locked elements.
 
 - Claims that a control is dead, static, or leads nowhere need `[verified]`. From a screenshot or pasted copy they are `[assumed]`.
 - `Do not ship` can no longer rest on assumptions alone.
+- Numbers that stay the same across reloads no longer count as proof that a widget is static; `[verified]` needs the data source.
 - Under `Ship` only, an empty slot reads "No further fix needed." instead of a problem invented to reach three.
 - Output follows the user's language; page copy is quoted in its original language.
 - A locked element is called working only if it was verified.
-- Repeated rules are stated once. The `SKILL.md` body went from 1,646 to 1,474 words (9,888 to 8,935 bytes) while adding the rules above.
+- Repeated rules are stated once. The `SKILL.md` body went from 1,646 to 1,511 words (9,888 to 9,140 bytes) while adding the rules above.
 - The trigger list was removed from the body; only the frontmatter description affects activation.
 - New negative triggers: performance audits, interior pages, and reality checks of plans, code, or claims that are not a web page.
 - `SKILL_HE.md` is a full translation with the same sections, instead of a summary.
