@@ -1,0 +1,30 @@
+{
+  "_comment": "Canonical trigger phrases and an activation eval set. check_package.py verifies that the description and both READMEs carry the canonical phrases. The prompts are run by hand in each agent (see README, Testing) because activation depends on the model, not on this repo.",
+  "canonical": {
+    "en": ["reality check", "homepage", "landing page", "first screen", "ready to go live", "dead buttons", "generic AI copy", "CTA"],
+    "he": ["בדיקת מציאות", "מה שבור בעמוד הראשון", "האם אפשר לעלות לאוויר"],
+    "transliterated": ["bdikat metziut", "ma shavur baamud harishon"],
+    "negative": ["SEO", "security", "accessibility", "performance", "redesign", "interior pages"]
+  },
+  "should_trigger": [
+    "Run a reality check on https://shiftly.example",
+    "Is this homepage clear? (screenshot attached)",
+    "Does this landing page actually work, or is it just a pretty demo?",
+    "Is our homepage ready to go live?",
+    "Check the first screen of our site for dead buttons and generic AI copy",
+    "תעשה בדיקת מציאות לעמוד הבית שלנו",
+    "מה שבור בעמוד הראשון של האתר?",
+    "האם אפשר לעלות לאוויר עם דף הנחיתה הזה?",
+    "bdikat metziut la-atar sheli"
+  ],
+  "should_not_trigger": [
+    "Run a full SEO audit of shiftly.example",
+    "Check our site for WCAG and IS 5568 accessibility compliance",
+    "Redesign our homepage hero section",
+    "Why is our Lighthouse performance score so low?",
+    "Reality check: is my startup business plan realistic?",
+    "Give me a reality check on this PR. Is it actually done?",
+    "תבדוק את האתר לנגישות לפי תקן 5568",
+    "Review the security headers on our login page"
+  ]
+}

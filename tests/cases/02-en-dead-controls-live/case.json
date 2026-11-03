@@ -1,0 +1,25 @@
+{
+  "id": "02-en-dead-controls-live",
+  "title": "Clear product, dead primary path, checked on the live page",
+  "input": {
+    "mode": "live page, interacted",
+    "how": "python3 -m http.server 8765 -d tests/cases/02-en-dead-controls-live, then give the agent a browser tool",
+    "prompt": "Run a reality check on http://localhost:8765/page.html"
+  },
+  "source_text": ["page.html"],
+  "checks": "Measured with Playwright on 2026-11-03: 'Start free trial' only appends # to the URL, 'Watch demo' opens nothing, /pricing returns 404, the LIVE numbers are identical across two reloads.",
+  "expect": {
+    "outcome": "report",
+    "language": "en",
+    "verdict_in": ["fix3", "no"],
+    "basis": [0],
+    "required_tags": ["verified"],
+    "numbers_from_source": true,
+    "allowed_numbers": ["404", "8765"],
+    "should_contain_any": [
+      ["Start free trial"],
+      ["LIVE", "live panel", "static"],
+      ["Shift scheduling for restaurants"]
+    ]
+  }
+}

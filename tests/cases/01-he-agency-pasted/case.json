@@ -1,0 +1,23 @@
+{
+  "id": "01-he-agency-pasted",
+  "title": "Hebrew agency homepage from pasted copy: no concrete noun, no primary action, floating claims",
+  "input": {
+    "mode": "pasted copy",
+    "how": "paste input.md into the chat after the prompt",
+    "prompt": "תעשה בדיקת מציאות לעמוד הבית שלנו. זה הטקסט:"
+  },
+  "source_text": ["input.md"],
+  "expect": {
+    "outcome": "report",
+    "language": "he",
+    "verdict_in": ["fix3"],
+    "basis": [3],
+    "forbidden_tags": ["verified"],
+    "numbers_from_source": true,
+    "should_contain_any": [
+      ["פעולה עסקית ראשית אחת"],
+      ["500+", "המובילה בישראל", "ROI"],
+      ["בניית אתרים", "השירותים"]
+    ]
+  }
+}

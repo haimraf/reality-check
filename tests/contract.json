@@ -1,0 +1,68 @@
+{
+  "_comment": "Single source of truth for the output contract labels and for rule anchors. check_package.py verifies SKILL.md, SKILL_HE.md, and the READMEs against it; check_output.py uses it to validate Reality Check outputs.",
+  "labels": {
+    "en": {
+      "headings": ["Verdict", "Top 3 fixes", "Do not touch", "Why"],
+      "verdicts": {"ship": "Ship", "fix3": "Only after 3 fixes", "no": "Do not ship"},
+      "tags": {"verified": "[verified]", "observed": "[observed]", "assumed": "[assumed]"},
+      "basis_prefix": "Basis:",
+      "basis_values": ["live page, interacted", "live page, read only", "screenshot", "pasted copy"],
+      "not_checked": "not checked:",
+      "stop": "Not diagnosed:",
+      "empty_slot": "No further fix needed.",
+      "check_words": ["verify", "check", "confirm"]
+    },
+    "he": {
+      "headings": ["פסק דין", "3 התיקונים הראשונים", "מה לא לגעת בו", "למה זה המצב"],
+      "verdicts": {"ship": "אפשר לעלות", "fix3": "רק אחרי 3 תיקונים", "no": "אסור לעלות"},
+      "tags": {"verified": "[נבדק]", "observed": "[נצפה]", "assumed": "[הנחה]"},
+      "basis_prefix": "בסיס:",
+      "basis_values": ["אתר חי, נבדק בלחיצות", "אתר חי, קריאה בלבד", "צילום מסך", "טקסט מודבק"],
+      "not_checked": "לא נבדק:",
+      "stop": "לא אובחן:",
+      "empty_slot": "אין תיקון נוסף שמצדיק עבודה.",
+      "check_words": ["לוודא", "לבדוק", "לאמת"]
+    }
+  },
+  "rule_anchors": {
+    "en": [
+      "is this page a product people can understand and act on, or a polished demo?",
+      "An empty shell is not an empty page",
+      "never assumptions alone",
+      "Do not force every module to fail",
+      "name-swap test",
+      "choose one primary business action",
+      "A weak claim is Proof; a dead button is Reality",
+      "three ranked problems, not five compressed into three lines",
+      "Never invent a problem to fill a slot",
+      "Call it working only if verified",
+      "no module scores",
+      "Proof and Reality never share a fix",
+      "Do not state unverified behavior as fact",
+      "v1 is homepage only",
+      "Pick one."
+    ],
+    "he": [
+      "האם העמוד הוא מוצר שאנשים מבינים ויכולים לפעול עליו, או דמו מלוטש?",
+      "מעטפת ריקה אינה עמוד ריק",
+      "לעולם לא הנחות בלבד",
+      "לא מכריחים כל מודול להיכשל",
+      "מבחן החלפת השם",
+      "בחרו פעולה עסקית ראשית אחת",
+      "טענה חלשה היא הוכחה; כפתור מת הוא מציאות",
+      "שלוש בעיות מדורגות, לא חמש בעיות דחוסות בשלוש שורות",
+      "לא ממציאים בעיה כדי למלא מקום",
+      "קוראים לו \"עובד\" רק אם נבדק",
+      "בלי ציון לכל מודול",
+      "הוכחה ומציאות לא חולקות תיקון",
+      "לא מציגים התנהגות שלא נבדקה כעובדה",
+      "v1 הוא עמוד הבית בלבד",
+      "בוחרים אחד."
+    ]
+  },
+  "budget": {
+    "_comment": "Ceiling on the SKILL.md body, loaded on every activation. 1.0.0 was 1,646 words / 9,888 bytes; 1.1.0 is 1,474 / 8,935. Raise only on purpose.",
+    "body_words_max": 1600,
+    "body_bytes_max": 9500
+  }
+}

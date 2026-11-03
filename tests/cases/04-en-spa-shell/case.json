@@ -1,0 +1,16 @@
+{
+  "id": "04-en-spa-shell",
+  "title": "Client-rendered shell: a text fetch returns no copy, so the skill must stop instead of judging an empty page",
+  "input": {
+    "mode": "live page, read only",
+    "how": "python3 -m http.server 8766 -d tests/cases/04-en-spa-shell, then let the agent fetch the URL (the script bundle is missing on purpose, so a browser renders an empty page too)",
+    "prompt": "Reality check this homepage before we launch: http://localhost:8766/page.html"
+  },
+  "source_text": ["page.html"],
+  "expect": {
+    "outcome": "stop",
+    "language": "en",
+    "basis": [1],
+    "should_contain_any": [["screenshot"], ["shell", "client-rendered", "JavaScript"]]
+  }
+}

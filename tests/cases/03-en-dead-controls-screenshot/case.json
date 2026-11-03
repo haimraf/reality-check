@@ -1,0 +1,49 @@
+{
+  "id": "03-en-dead-controls-screenshot",
+  "title": "The case 02 page as a screenshot: nothing can be clicked, so nothing is verified",
+  "input": {
+    "mode": "screenshot",
+    "how": "attach screenshot.png (rendered from case 02 by tests/render_screenshot.js)",
+    "prompt": "Is this homepage ready to go live? (screenshot attached)"
+  },
+  "source_text": [
+    "../02-en-dead-controls-live/page.html"
+  ],
+  "expect": {
+    "outcome": "report",
+    "language": "en",
+    "verdict_in": [
+      "ship",
+      "fix3"
+    ],
+    "basis": [
+      2
+    ],
+    "forbidden_tags": [
+      "verified"
+    ],
+    "required_tags": [
+      "assumed"
+    ],
+    "must_not_contain": [
+      "404"
+    ],
+    "numbers_from_source": true,
+    "should_contain_any": [
+      [
+        "Start free trial"
+      ],
+      [
+        "10,000+",
+        "Trusted by"
+      ]
+    ],
+    "should_not_contain": [
+      "is dead",
+      "does nothing",
+      "goes nowhere",
+      "is fake",
+      "is static"
+    ]
+  }
+}
