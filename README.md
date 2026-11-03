@@ -87,7 +87,7 @@ For Claude Desktop or claude.ai, zip the `reality-check` folder and upload it as
 
 - Follows the [Agent Skills](https://github.com/agentskills/agentskills) format and passes its `skills-ref` validator.
 - No MCP server, no scripts, no extra permissions. Clicking controls needs a browser tool; without one, behavior findings stay `[observed]` or `[assumed]`.
-- Version 1.0.0 was tested with Codex and Grok. Version 1.1.0 passes the repository checks but has not yet been run through the regression cases in any agent.
+- Version 1.0.0 was tested with Codex and Grok. Version 1.1.0 passed regression cases 01-05 in one blind run in ChatGPT Work (Codex-based agents; case 02 in a real cloud browser) on 2026-11-03. That run clicked every control in case 02 but did not capture network requests, so the LIVE panel's data source was not verified. 1.1.0 has not been run in Grok, the Codex CLI, or Codex cloud.
 
 ## Repository layout
 

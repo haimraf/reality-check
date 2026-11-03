@@ -155,5 +155,41 @@ class BlockedTests(unittest.TestCase):
         self.assertEqual(co.check_output(text, CASE01)[2]["status"], "FAIL")
 
 
+class BasisNameTests(unittest.TestCase):
+    """Final 19f49f7 run: case 04 wrote "live page, text fetch only", the skill's own
+    input-table name for "live page, read only", and was scored FAIL."""
+
+    CASE04 = co.load_case(TESTS / "cases" / "04-en-spa-shell")
+
+    def test_case04_original_output_passes(self):
+        text = (TESTS / "cases" / "04-en-spa-shell" / "alt-text-fetch-only.md").read_text(encoding="utf-8")
+        self.assertIn("live page, text fetch only", text)
+        hard, soft, info = co.check_output(text, self.CASE04)
+        self.assertEqual((hard, soft, info["status"]), ([], [], "PASS"))
+
+    def test_every_table_name_is_accepted_in_both_languages(self):
+        for lang in ("en", "he"):
+            lab = co.LABELS[lang]
+            for i, names in enumerate(lab["basis_aliases"]):
+                for name in names:
+                    self.assertTrue(co.names_input(f"{lab['basis_prefix']} {name.capitalize()}; x", lab, [i]), name)
+
+    def test_unknown_or_vague_names_still_fail(self):
+        for basis in ("Basis: live page; not checked: buttons", "Basis: I looked at it; not checked: buttons", "Basis: web page; not checked: buttons"):
+            self.assertTrue(any("must name the input" in p for p in hard_of(report(GOOD_FIXES, ["Catalog - list"], basis))), basis)
+
+    def test_a_read_only_name_does_not_count_as_interacted(self):
+        expected = (TESTS / "cases" / "02-en-dead-controls-live" / "expected.md").read_text(encoding="utf-8")
+        text_fetch = expected.replace("live page, interacted", "live page, text fetch only").replace("[verified]", "[observed]")
+        clicked = expected.replace("live page, interacted", "live page, rendered and clicked")
+        self.assertEqual(co.check_output(text_fetch, CASE02)[2]["status"], "BLOCKED")
+        self.assertEqual(co.check_output(clicked, CASE02)[2]["status"], "PASS")
+
+    def test_case04_still_rejects_a_screenshot_basis(self):
+        text = (TESTS / "cases" / "04-en-spa-shell" / "alt-text-fetch-only.md").read_text(encoding="utf-8")
+        text = text.replace("live page, text fetch only", "screenshot")
+        self.assertIn("case expects basis ['live page, read only']", hard_of(text, self.CASE04))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -182,6 +182,14 @@ def main():
     example_he = (TESTS / "cases" / "01-he-agency-pasted" / "expected.md").read_text(encoding="utf-8").strip()
     check(example_he in unquoted, "README.he.md: the example must match tests/cases/01-he-agency-pasted/expected.md")
 
+    # Basis aliases must be the input-table names the skill itself uses.
+    for lang, text in (("en", skill_text), ("he", he_text)):
+        table_rows = [line.lower() for line in text.splitlines() if line.startswith("| ")]
+        for names in contract["labels"][lang]["basis_aliases"]:
+            for name in names:
+                check(any(row.startswith("| " + name.lower()) for row in table_rows),
+                      f"contract.json: basis alias '{name}' is not an input-table row in the {lang} skill file")
+
     # 8. Core rules are still present in both languages.
     for anchor in contract["rule_anchors"]["en"]:
         check(anchor in skill_text, f"SKILL.md: rule anchor missing: '{anchor}'")

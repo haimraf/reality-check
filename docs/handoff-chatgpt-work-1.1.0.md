@@ -102,7 +102,7 @@ Field names below are descriptive. Match each to the field Studio actually shows
 | Required tools, permissions, MCP servers, env vars | None | `SKILL.md` `compatibility` |
 | Compatibility note | Needs a live URL, a screenshot, or pasted first-screen copy. No MCP server, scripts, or extra permissions. Clicking controls needs a browser tool; without one, behavior findings stay unverified. | `SKILL.md` `compatibility` |
 | Supported clients | claude-code, cursor, github-copilot, windsurf, opencode, codex, gemini-cli, grok | `metadata.json` `supported_agents` |
-| Tested clients | 1.0.0: Codex, Grok. 1.1.0: not yet run in any agent | `README.md` |
+| Tested clients | 1.0.0: Codex, Grok. 1.1.0: cases 01-05 passed in one blind run in ChatGPT Work (Codex-based agents) on 2026-11-03; not run in Grok, Codex CLI, or Codex cloud | `README.md` |
 | Install command | `npx mcprush@latest skill add haimraf/reality-check` | MCPRush CLI README |
 | Example output | Case 03 output in `README.md` (screenshot input, shows `[assumed]` tags) | `tests/cases/03-en-dead-controls-screenshot/expected.md` |
 | Price / plan | No change from the current listing. This PR does not touch pricing | |
@@ -126,7 +126,7 @@ Each step needs Haim's explicit approval before it is taken.
 
 ## 9. Open items and risks
 
-- **Not run in an agent yet.** The reference outputs in `tests/cases` were written by hand from the rules. They are the target, not recorded runs.
+- **One agent run so far.** Cases 01-05 passed once in ChatGPT Work on 19f49f7. The reference outputs in `tests/cases` were written by hand from the rules; `alt-text-fetch-only.md` in case 04 is the one recorded agent output kept in the repo.
 - **Name collision.** Other publishers have skills named `reality-check` (for code and claims, not homepages). Two skills with the same folder name cannot sit side by side in one skills folder. The description now separates them by scope. Renaming would be a breaking change and is Haim's call.
 - **`compatibility` in Claude Desktop uploads.** The Agent Skills spec allows it, and 1.0.0 already had it in `reality-check/SKILL.md`. Whether Claude Desktop's upload accepts it was not verified.
 - **Skills IL.** If Skills IL reads the repository root as the skill folder, its validator would flag the root `README.md` ("no README in a skill folder") and expects sections such as Examples and Troubleshooting. Not addressed in this PR; MCPRush was the target.

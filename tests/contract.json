@@ -37,6 +37,20 @@
         "not checked",
         "not tested",
         "not verified"
+      ],
+      "basis_aliases": [
+        [
+          "live page, rendered and clicked"
+        ],
+        [
+          "live page, text fetch only"
+        ],
+        [
+          "screenshots plus nav labels"
+        ],
+        [
+          "pasted first-screen copy"
+        ]
       ]
     },
     "he": {
@@ -73,6 +87,20 @@
       ],
       "not_checked_variants": [
         "לא נבדק"
+      ],
+      "basis_aliases": [
+        [
+          "אתר חי, מרונדר ונבדק בלחיצות"
+        ],
+        [
+          "אתר חי, שליפת טקסט בלבד"
+        ],
+        [
+          "צילומי מסך ותוויות ניווט"
+        ],
+        [
+          "טקסט מודבק מהמסך הראשון"
+        ]
       ]
     }
   },

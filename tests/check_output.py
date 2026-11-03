@@ -52,6 +52,19 @@ def asserts(text, phrase):
     return False
 
 
+def names_input(basis, lab, indices=None):
+    """True when the basis names one of the inputs at `indices` (default: any input).
+
+    SKILL.md names each input twice: the template value ("live page, read only")
+    and its input-table row ("Live page, text fetch only"). Both count.
+    """
+    low = basis.lower()
+    for i in (range(len(lab["basis_values"])) if indices is None else indices):
+        if any(name.lower() in low for name in [lab["basis_values"][i]] + lab["basis_aliases"][i]):
+            return True
+    return False
+
+
 def not_checked_clause(basis, lab):
     """True when the basis line says what was not checked, followed by some content."""
     variants = "|".join(re.escape(v) for v in lab["not_checked_variants"])
@@ -138,7 +151,7 @@ def check_output(text, case=None):
         if not basis[len(lab["basis_prefix"]):].strip():
             hard.append("stop output must say what was received on the basis line")
     else:
-        if not any(value in basis for value in lab["basis_values"]):
+        if not names_input(basis, lab):
             hard.append(f"basis line must name the input: one of {lab['basis_values']}")
         if not not_checked_clause(basis, lab):
             hard.append(f"basis line must say what was not checked ('{lab['not_checked']} ...')")
@@ -213,7 +226,7 @@ def check_output(text, case=None):
         expect = case["expect"]
         if case.get("needs_interaction"):
             wanted = [LABELS[lang]["basis_values"][i] for i in expect.get("basis", [])]
-            if info["outcome"] == "stop" or not (basis and any(v in basis for v in wanted)):
+            if info["outcome"] == "stop" or not (basis and names_input(basis, LABELS[lang], expect.get("basis", []))):
                 # The agent could not load or click the page. That is the environment, not a pass.
                 if not hard:
                     info["status"] = "BLOCKED"
@@ -228,8 +241,8 @@ def check_output(text, case=None):
         if expect.get("language") and expect["language"] != lang:
             hard.append(f"case expects a '{expect['language']}' answer, got '{lang}'")
         if basis and expect.get("basis"):
-            want = [LABELS[lang]["basis_values"][i] for i in expect["basis"]]
-            if not any(value in basis for value in want):
+            if not names_input(basis, LABELS[lang], expect["basis"]):
+                want = [LABELS[lang]["basis_values"][i] for i in expect["basis"]]
                 hard.append(f"case expects basis {want}")
         for tag in expect.get("forbidden_tags", []):
             if tag in info["tags"]:
