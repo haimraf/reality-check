@@ -1,0 +1,22 @@
+{
+  "id": "05-he-clear-product-pasted",
+  "title": "Hebrew product page that holds: the verdict is Ship and the skill must not invent a third problem",
+  "input": {
+    "mode": "pasted copy",
+    "how": "paste input.md into the chat after the prompt",
+    "prompt": "האם אפשר לעלות לאוויר עם דף הנחיתה הזה?"
+  },
+  "source_text": ["input.md"],
+  "expect": {
+    "outcome": "report",
+    "language": "he",
+    "verdict_in": ["ship"],
+    "basis": [3],
+    "forbidden_tags": ["verified"],
+    "numbers_from_source": true,
+    "should_contain_any": [
+      ["זימון תורים לקליניקות פיזיותרפיה"],
+      ["התחילו ניסיון של 14 יום"]
+    ]
+  }
+}

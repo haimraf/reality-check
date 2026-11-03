@@ -1,305 +1,151 @@
 ---
 name: reality-check
-description: Run a homepage Reality Check. Is this page a real product or a demo in costume? Returns one verdict, exactly three fixes ranked by damage, and what must not be touched. Use when the user asks to check a homepage, landing page, or site for clarity, fake-working components, generic claims, missing primary action, production readiness of the first screen, "reality check", "bdikat metziut", or "ma shavur baamud harishon". Do NOT use for full SEO, security, accessibility, or redesign audits.
+description: >-
+  Homepage Reality Check. Diagnoses whether a homepage or main landing page is
+  a real product people can understand and act on, or a polished demo. Returns
+  one verdict, exactly three fixes ranked by damage, and 1-3 elements not to
+  touch, with every finding marked verified, observed, or assumed. Use when the
+  user asks for a reality check of a homepage, landing page, or a site's first
+  screen, asks whether it is clear or ready to go live, or points to dead
+  buttons, fake or placeholder UI, generic AI copy, a missing or competing CTA,
+  or unsupported claims. Hebrew triggers: "בדיקת מציאות", "מה שבור בעמוד
+  הראשון", "האם אפשר לעלות לאוויר", "bdikat metziut", "ma shavur baamud
+  harishon". Do NOT use for full SEO, security, accessibility, performance, or
+  redesign audits, for interior pages, or for reality checks of plans, code, or
+  claims that are not a web page.
 license: MIT
-compatibility: Needs live URL or pasted above-the-fold copy. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  version: "1.0.0"
-  author: Studio Haim
-  category: marketing-growth
-  display_name:
-    he: בדיקת מציאות לעמוד הבית
-    en: Homepage Reality Check
-  display_description:
-    he: אבחון עמוד בית - מוצר אמיתי או דמו מלוטש. מחזיר פסק דין אחד, בדיוק 3 תיקונים לפי נזק, ומה לא לגעת בו. לא SEO, לא נגישות, לא רידיזיין.
-    en: Diagnose a homepage - real product or polished demo. Returns one verdict, exactly three damage-ranked fixes, and what must not be touched. Not for SEO, accessibility, or redesign audits.
-  tags:
-    he:
-      - בדיקת-אתר
-      - עמוד-הבית
-      - חוויית-משתמש
-      - בהירות-מוצר
-      - הנעה-לפעולה
-      - וייב-קודינג
-    en:
-      - website-audit
-      - homepage
-      - ux
-      - product-clarity
-      - cta
-      - vibe-coding
+compatibility: >-
+  Needs a live URL, a screenshot, or pasted first-screen copy. No MCP server,
+  scripts, or extra permissions. Clicking controls needs a browser tool;
+  without one, behavior findings stay unverified.
 ---
 # Reality Check
 
-A homepage diagnosis skill. It does not redesign. It does not invent business strategy.
-It answers one question: **is this page a product people can understand and act on, or a polished demo?**
+Diagnosis only: no redesign, no invented business strategy. One question: **is this page a product people can understand and act on, or a polished demo?**
 
-v1 scope is **homepage / primary landing page only**.
+Scope (v1): the homepage or primary landing page. Out of scope: interior pages (unless the user names one), brand strategy, funnel analytics, security, performance, WCAG or IS 5568, SEO crawls. For those requests, run only if the user explicitly wants a Reality Check first. Hebrew quality, mobile layout, cookie banners, and generic AI tone count only when they break understanding, action, trust, or reality (example: a cookie banner covering the only CTA).
 
-## Trigger
+## 1. Read the page, record what you can verify
 
-Activate when the user asks things like:
+Inputs, best first. Builder context (Lovable, Bolt, v0, Cursor) hints at common failures; it is never proof.
 
-- "reality check on this site"
-- "is this homepage clear"
-- "does this page actually work"
-- "בדיקת מציאות לעמוד הבית"
-- "מה שבור בעמוד הראשון"
-- check for AI slop, dead buttons, generic copy, missing CTA, fake proof
+| Input | Establishes | Cannot establish |
+|---|---|---|
+| Live page, rendered and clicked (use a browser tool if available) | Copy, layout, whether clicked controls, links, and forms work | Anything not clicked |
+| Live page, text fetch only | Copy and its order | The fold, layout, mobile, whether anything works |
+| Screenshots plus nav labels | What is in the frame, layout, the fold at that size | Whether anything works, anything outside the frame |
+| Pasted first-screen copy | Wording | Layout, the fold, whether anything works |
 
-Do **not** activate for full-site SEO audits, security reviews, accessibility compliance, or visual redesign requests unless the user explicitly wants a Reality Check first.
+Tag every fix with its evidence:
 
-## Scope (v1)
+- **[verified]** (HE [נבדק]): exercised in this run (loaded, clicked, followed, submitted) and the result was seen.
+- **[observed]** (HE [נצפה]): visible in the material provided, not exercised. Enough for findings about what the page says or shows.
+- **[assumed]** (HE [הנחה]): inferred, not seen or tested. Phrase it as a check: "Verify that ...".
 
-| In scope | Out of scope |
-|----------|--------------|
-| Homepage / main landing page | Interior pages (unless user forces one page) |
-| What the product is | Brand strategy workshops |
-| Primary action | Full funnel analytics |
-| Proof vs claims | Security / RLS / secrets |
-| Noise and duplication | Lighthouse performance scores |
-| Dead / fake / disconnected UI | WCAG / IS 5568 full audit |
-| | SEO technical crawl |
+Evidence rules:
 
-Hebrew quality, mobile layout, cookie banners, and AI-generic tone are **signals inside modules**, not separate modules. Only raise them if they break understanding, action, trust, or reality.
+- Saying a control, link, form, or widget is dead, broken, static, or leads nowhere needs [verified]; from a screenshot or pasted copy it is [assumed] at most. Visible signs (placeholder text, "Lorem ipsum", "Coming soon" on a live-looking control) are [observed].
+- Numbers that stay the same across reloads do not prove a widget is static; a real daily total can hold still. [verified] needs the data source: values hard-coded in the HTML with no request behind them.
+- Calling testimonials, logos, or numbers fabricated needs visible signs; otherwise [assumed].
+- "Do not ship" needs at least one [verified] or [observed] finding, never assumptions alone.
 
-## Input
+Stop without diagnosing when the page cannot be read: unreachable URL, login wall, or only a client-rendered shell (empty root div, "enable JavaScript", a script bundle with no copy; common in Lovable, Bolt, and v0 builds). An empty shell is not an empty page. Use the stop output and ask for a rendered view, a screenshot, or the pasted copy. Never invent content.
 
-Prefer, in order:
+## 2. Five modules: candidate findings only
 
-1. Live URL of the homepage
-2. If no URL: pasted hero + above-the-fold copy, or screenshots + nav labels
-3. Optional: repo or builder context (Lovable / Bolt / v0 / Cursor) - use only as a hint for common failure patterns, never as proof
+Modules never write report chapters. A module may find nothing, and a mild finding may stay out of the three. Do not force every module to fail.
 
-If the page cannot be read, say so and stop. Do not invent content.
+**Name noun (שם עצם).** Within about 8 seconds: what is it, for whom, and what is sold or built, as a concrete noun?
+Fails: only abstractions ("solutions", "growth", "digital", "excellence"); missing or buzzword audience; headline is pure approach with no catalog; the name-swap test passes (a competitor's name fits the same copy).
+Fix: sharpen the existing line with a concrete noun, or surface a catalog that exists lower on the page. No product category the page never mentions.
 
-## Pipeline
+**Action (פעולה).** Is it clear what to do now, with one primary CTA that does not compete with itself?
+Fails: no clear primary CTA on the first screen; two primary CTAs of equal weight; only vague CTAs ("learn more", "discover", "שלח/י" with no context); the primary path does not match the page's promise.
+Fix: sharpen or prioritize an action that already exists, or cut competing CTAs. If several services exist and none is primary, say "choose one primary business action" and do not choose for the client.
 
-```
-Page
-  → 5 modules (candidate findings only)
-  → internal findings pool
-  → damage ranking
-  → verdict
-  → exactly 3 fixes
-  → 1–3 locked elements
-  → fixed output contract
-```
+**Proof (הוכחה).** Do the claims rest on credible evidence?
+Fails: claims with no evidence (numbers, live product, before/after, named process, real screenshot); generic or fabricated-looking "proof"; "real", "trusted", or "leading" with nothing behind it; claims that contradict each other.
+Fix: connect an existing claim to existing evidence, or remove or tone down the claim.
 
-Modules never write report chapters. They only emit **candidate findings**.
-One decision layer picks what ships in the output.
+**Noise (רעש).** What competes for attention, repeats the message, or can go without loss?
+Fails: several primary messages at once; blocks repeating one idea; elements pulling focus from the primary action; content whose removal makes the page clearer.
+Fix: delete, shorten, or move secondary paths lower. No full reorder.
 
----
+**Reality (מציאות).** Does anything look live or real but is dead, invented, disconnected, or self-contradicting?
+Fails: a control, form, or link that looks live and does nothing; a nav item to a 404, the same page, or a placeholder; a "working" component that is static theater; text, numbers, or logos that read as fabricated; copy promising a screen that does not exist.
+Fix: connect it, remove it, or strip the false appearance of liveness. No new feature.
 
-## Module 1 — Name noun (שם עצם)
+Proof is a claim without evidence. Reality is UI or a path that pretends to work or exist. A weak claim is Proof; a dead button is Reality.
 
-**Asks:** Within ~8 seconds, is it clear what this is, who it is for, and what is sold or built — with a concrete noun, not philosophy?
+## 3. Decide
 
-**Failure when:**
-- No concrete noun for what is built/sold (only “solutions”, “growth”, “digital”, “excellence”)
-- Audience is missing or pure buzzword
-- Headline is pure approach/process with no catalog
-- Name-swap test passes: replace the brand name with a competitor and the copy still works
+Rank candidates by damage: (1) breaks understanding, the user does not know what this is; (2) breaks action, the user does not know what to do; (3) breaks trust, it looks fake, dead, or contradictory; (4) noise, only when it weakens 1-3.
 
-**Allowed fix type:**
-- Sharpen existing positioning line to include a concrete noun
-- Point out that the catalog exists below the fold and must surface earlier
-- **Not** invent a new product category the page never mentions
+Select exactly three fixes: three ranked problems, not five compressed into three lines. When Proof and Reality compete for a slot, keep the higher-damage one and leave the other out.
 
----
+| Verdict (EN / HE) | When |
+|---|---|
+| Ship / אפשר לעלות | Understanding, action, and trust hold; what remains is minor |
+| Only after 3 fixes / רק אחרי 3 תיקונים | Fixable damage to understanding, action, or trust |
+| Do not ship / אסור לעלות | Core understanding or trust is broken beyond three tight edits (example: product unclear, proof is theater, and the primary path is dead) |
 
-## Module 2 — Action (פעולה)
+One verdict, no "maybe", no "almost". Under Ship only, a slot with no real finding left reads "No further fix needed." (HE: "אין תיקון נוסף שמצדיק עבודה."). Never invent a problem to fill a slot.
 
-**Asks:** Is it clear what the user should do now, and is there one primary CTA that does not compete with itself?
+Lock 1-3 elements that work, so diagnosis does not turn into redesign: a sharp differentiating headline, real proof already on the page, a clear catalog of concrete offerings, honest status labels, or a primary contact path. Call it working only if verified. If almost nothing qualifies, lock the least damaging real asset and say why.
 
-**Failure when:**
-- No clear primary CTA above the fold
-- Two primary CTAs at equal strength
-- Vague CTAs only (“learn more”, “discover”, “שלח/י” with no context)
-- Primary path does not match what the page promises
+## 4. Output contract (every run)
 
-**Allowed fix type:**
-- Sharpen or prioritize an **action that already exists** on the page
-- If multiple services exist and none is marked primary: say **“choose one primary business action”** — do **not** pick which service should win
-- Reduce competing CTAs; do not add new buttons
-
-**Hard rule:** Never invent a business goal the page does not support. Reality Check diagnoses; it does not become the client’s strategist.
-
----
-
-## Module 3 — Proof (הוכחה)
-
-**Asks:** Do the page’s claims rest on credible evidence, or do they float?
-
-**Failure when:**
-- Claims without evidence (numbers, live product, before/after, named process, real screenshot)
-- “Proof” that looks generic or fabricated
-- “Real / trusted / leading” labels with nothing behind them
-- Contradictory claims across sections
-
-**Allowed fix type:**
-- Connect an existing claim to existing evidence on the page
-- Remove or tone down a claim that has no support
-- **Not** invent testimonials, metrics, or case studies
-
----
-
-## Module 4 — Noise (רעש)
-
-**Asks:** What competes for attention, duplicates the message, or can be deleted without harming understanding?
-
-**Failure when:**
-- Multiple primary messages at once
-- Blocks that repeat the same idea
-- Elements that pull focus from the primary action
-- Content that can be removed and the page becomes clearer
-
-**Allowed fix type:**
-- Delete or shorten only
-- Defer secondary paths lower
-- **Not** add sections, not full reorder redesign
-
----
-
-## Module 5 — Reality (מציאות)
-
-**Asks:** Does anything look active or real but is actually dead, invented, disconnected, or self-contradicting?
-
-**Failure when:**
-- Button / form / link that looks live and does nothing
-- Nav item to 404, same page, or placeholder
-- “Working” component that is static theater
-- Text, numbers, or logos that sound fabricated
-- Copy promises a screen that does not exist
-
-**Allowed fix type:**
-- Connect, remove, or strip the false appearance of liveness
-- **Not** build a new feature
-
-**Separation from Proof:**
-- Proof = claim without evidence
-- Reality = UI/path that pretends to work or exist and does not
-Keep them distinct. A weak claim is Proof. A dead button is Reality.
-
----
-
-## Candidate findings → Damage ranking
-
-Collect all module candidates. Rank by damage:
-
-1. **Breaks understanding** — user does not know what this is
-2. **Breaks action** — user does not know what to do
-3. **Breaks trust** — looks fake, dead, or contradictory
-4. **Noise** — only if it weakens 1–3
-
-Select **exactly three** fixes.
-If a module finds only mild weakness, it may contribute **zero** items to the final three.
-Do not force every module to “find something.”
-
-**One fix = one damage.**
-Do not pack two distinct module findings into one numbered fix just to fit the triple.
-Proof (claim without evidence) and Reality (UI that pretends to work) stay separate: pick the higher-damage one for a slot; leave the weaker out of the three if needed.
-“Exactly three fixes” means three ranked problems — not five problems compressed into three lines.
-
----
-
-## Verdict rules
-
-One verdict only:
-
-| Verdict | When |
-|---------|------|
-| **אפשר לעלות** | Understanding + action + trust hold; remaining issues are minor noise |
-| **רק אחרי 3 תיקונים** | Fixable damage in understanding, action, or trust; page is not hopeless |
-| **אסור לעלות** | Core understanding or trust is broken and not fixable by three tight edits (e.g. product is unclear and proof is theater and primary path is dead) |
-
-No “maybe”. No “almost”. One line of reason after the verdict.
-
----
-
-## Locked elements (“מה לא לגעת בו”)
-
-Always output **1–3** elements that work and must not be touched.
-
-Purpose: stop the agent (and the human) from turning diagnosis into redesign.
-
-Prefer locking:
-- A sharp headline that differentiates
-- Real proof already on the page
-- A clear catalog/list of concrete offerings
-- Honest status labels
-- A working primary contact path
-
-If almost nothing is lockable, lock the least-damaging real asset and say why.
-
----
-
-## Output contract (mandatory every run)
-
-No extra chapters. No scores per module. No 40-finding dump.
+Write in the user's language; quote page copy in its original language. No other sections, no module scores, no finding dumps.
 
 ```text
-# Reality Check — [site name or URL]
+# Reality Check - [site name or URL]
+Basis: [live page, interacted | live page, read only | screenshot | pasted copy]; not checked: [what]
 
-## פסק דין
-אפשר לעלות / רק אחרי 3 תיקונים / אסור לעלות
+## Verdict
+[Ship | Only after 3 fixes | Do not ship]
 
 [One sentence why.]
 
-## 3 התיקונים הראשונים
-1. [What to fix] — [Why it hurts] — [How in one sentence, without inventing strategy]
+## Top 3 fixes
+1. [evidence tag] [What to fix] - [Why it hurts] - [How, in one sentence, without inventing strategy]
 2. ...
 3. ...
 
-## מה לא לגעת בו
-- [Element] — [Why lock it]
-(1–3 items)
+## Do not touch
+- [Element] - [Why lock it]
 
-## למה זה המצב
-[2–4 lines. Central reason only. Not a tour of all modules.]
+## Why
+[2-4 lines. The central reason only, not a tour of the modules.]
 ```
 
-Language: direct, Hebrew when the page/user is Hebrew. No “מומלץ לשקול”. No therapy-speak.
+Hebrew labels: `בסיס:` (אתר חי, נבדק בלחיצות | אתר חי, קריאה בלבד | צילום מסך | טקסט מודבק) and `לא נבדק:`, `## פסק דין`, `## 3 התיקונים הראשונים`, `## מה לא לגעת בו`, `## למה זה המצב`.
 
----
+Stop output (HE: `לא אובחן:`):
 
-## Hard prohibitions
+```text
+# Reality Check - [URL]
+Basis: [what was received]
+Not diagnosed: [why the page could not be read]. Send [a screenshot, the rendered page, or the pasted first-screen copy].
+```
 
-1. **Do not invent facts** — no made-up metrics, customers, or features.
-2. **Do not invent business goals** — do not choose which service is “the” product if the page does not; say the page must choose.
-3. **Do not force every module to fail** — empty candidate list from a module is valid.
-4. **Do not propose redesign** — no new sections, no layout overhaul, no “rethink the brand”.
-5. **Do not exceed three fixes** — rank and cut. Do not compress multiple distinct damages into one fix line.
-6. **Do not expand into SEO / security / accessibility / performance audits** unless a specific issue directly breaks understanding, action, trust, or reality on the homepage (example: cookie banner covering the only CTA).
-7. **Do not add CTAs or product lines** the page does not already support.
-8. **Do not write five module scores or five module chapters** in the user-facing output.
-9. **Do not merge Proof and Reality** into one fix. A floating claim and a dead control are two findings; rank them and keep only the worse one if the triple is full.
+Tone: direct. No "consider", no "מומלץ לשקול", no therapy-speak.
 
----
+## Hard rules
 
-## Example internal discipline (not user-facing)
+1. Do not invent facts: no made-up metrics, customers, testimonials, case studies, features, or page content.
+2. Do not invent business goals or pick the primary service; say the page must choose.
+3. Do not redesign: no new sections, layout overhaul, CTAs, product lines, features, or "rethink the brand".
+4. Exactly three fixes, one damage each; Proof and Reality never share a fix.
+5. Do not state unverified behavior as fact; tag it [assumed].
+6. Do not expand into SEO, security, accessibility, or performance audits unless an issue directly breaks understanding, action, trust, or reality on the homepage.
+7. Do not widen v1 scope silently. v1 is homepage only.
 
-After modules run, the decision layer may look like:
+## Decision example (internal, not user-facing)
 
-- Name noun: mild (generic positioning) → not in top 3
-- Action: severe (no primary CTA) → fix #1
-- Proof: severe (app claimed, never shown) → fix #2
-- Noise: severe (same paragraph ×4) → fix #3
-- Reality: mild (no clear dead control) → not in top 3
+- Name noun: mild (generic positioning) -> not in top 3
+- Action: severe (no primary CTA) -> fix 1
+- Proof: severe (app claimed, never shown) -> fix 2
+- Noise: severe (same paragraph x4) -> fix 3
+- Reality: nothing found -> not in top 3
 
-That is correct behavior.
-
-When Proof and Reality both fire:
-
-- Reality: severe (dead video that looks live) → fix #3
-- Proof: moderate (“leading” + big number, weak on-page evidence) → **out of the three**
-
-Do not write: “remove dead video and tone down leading claim” as one fix. Pick one.
-
----
-
-## v1 boundary
-
-This skill is **Reality Check**.
-v1 is homepage-only.
-Later versions may widen scope; do not widen silently inside v1.
+When both fire: Reality severe (a video that looks live, verified dead) -> fix 3; Proof moderate ("leading" plus a big number, weak evidence) -> out. Never "remove the dead video and tone down the leading claim" as one fix. Pick one.

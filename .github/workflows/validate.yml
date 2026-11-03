@@ -1,0 +1,35 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Package checks
+        run: python3 tests/check_package.py
+
+      - name: Regression cases
+        run: python3 tests/check_output.py --all
+
+      - name: Checker unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
+      - name: Agent Skills spec (skills-ref)
+        run: |
+          python3 -m pip install --quiet skills-ref==0.1.1
+          agentskills validate reality-check
+          # The root copy is validated through the checkout folder, which is named after the repository.
+          agentskills validate "$GITHUB_WORKSPACE"

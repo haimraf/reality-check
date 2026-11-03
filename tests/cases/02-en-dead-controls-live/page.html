@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shiftly - Shift scheduling for restaurants</title>
+<!-- Regression fixture. Deliberate faults: "Start free trial" and "Watch demo" do nothing,
+     "Pricing" links to a page that does not exist, the LIVE panel is static, and
+     "Trusted by 10,000+ restaurants" has nothing behind it. -->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #14213d; background: #fbfaf7; }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; }
+  nav .logo { font-weight: 800; font-size: 22px; }
+  nav a { margin-left: 28px; color: #14213d; text-decoration: none; }
+  .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; padding: 56px 48px 40px; align-items: center; }
+  h1 { font-size: 52px; line-height: 1.05; margin: 0 0 18px; }
+  .sub { font-size: 20px; line-height: 1.5; color: #44506a; max-width: 560px; }
+  .ctas { margin-top: 28px; display: flex; gap: 16px; }
+  .btn { padding: 15px 26px; border-radius: 10px; font-size: 17px; font-weight: 600; border: 0; cursor: pointer; text-decoration: none; }
+  .primary { background: #e85d04; color: #fff; }
+  .ghost { background: transparent; color: #14213d; border: 2px solid #14213d; }
+  .trust { margin-top: 22px; color: #44506a; font-size: 15px; }
+  .live { background: #fff; border: 1px solid #e3e1da; border-radius: 16px; padding: 28px; box-shadow: 0 10px 30px rgba(20,33,61,.08); }
+  .badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #c1121f; letter-spacing: .06em; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #c1121f; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  .metric { margin-top: 18px; }
+  .metric b { font-size: 38px; display: block; }
+  .metric span { color: #44506a; }
+  .how { padding: 40px 48px 56px; }
+  .how h2 { font-size: 30px; margin: 0 0 24px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .step { background: #fff; border: 1px solid #e3e1da; border-radius: 12px; padding: 22px; }
+  .step h3 { margin: 0 0 8px; font-size: 19px; }
+  .step p { margin: 0; color: #44506a; line-height: 1.5; }
+  .quote { margin: 0 48px 56px; padding: 28px; border-left: 4px solid #e85d04; background: #fff; font-size: 20px; }
+  .quote small { display: block; margin-top: 10px; color: #44506a; font-size: 15px; }
+  footer { padding: 28px 48px; color: #6b7280; font-size: 14px; border-top: 1px solid #e3e1da; }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Shiftly</div>
+    <div>
+      <a href="#how">Product</a>
+      <a href="/pricing">Pricing</a>
+      <a href="#">Log in</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>Shift scheduling for restaurants</h1>
+      <p class="sub">Build next week's rota in minutes, let staff swap shifts from their phones, and see overtime before it happens.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#">Start free trial</a>
+        <button class="btn ghost" type="button">&#9654; Watch demo</button>
+      </div>
+      <p class="trust">Trusted by 10,000+ restaurants</p>
+    </div>
+    <div class="live" aria-label="Live activity">
+      <div class="badge"><span class="dot"></span>LIVE ACROSS SHIFTLY</div>
+      <div class="metric"><b>1,284</b><span>shifts filled today</span></div>
+      <div class="metric"><b>312</b><span>swaps approved</span></div>
+      <div class="metric"><b>0</b><span>missed shifts this week</span></div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><h3>Import your team</h3><p>Add staff from a spreadsheet or invite them by text.</p></div>
+      <div class="step"><h3>Drag shifts onto the week</h3><p>Roles, hours, and availability show on one board.</p></div>
+      <div class="step"><h3>Publish to every phone</h3><p>Staff get the rota and can request swaps you approve.</p></div>
+    </div>
+  </section>
+
+  <blockquote class="quote">"Shiftly changed everything for us."<small>Restaurant owner</small></blockquote>
+
+  <footer>Shiftly &middot; Made for kitchens and floors</footer>
+</body>
+</html>
