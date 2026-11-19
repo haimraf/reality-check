@@ -106,6 +106,79 @@ class Case03AssumedTests(unittest.TestCase):
         self.assertIn("case forbids the [verified] tag with this input", hard_of(text, CASE03))
 
 
+class StaticInputVerifiedTests(unittest.TestCase):
+    """A screenshot or pasted copy loads and clicks nothing, so [verified] contradicts the Basis line.
+
+    The generic check must say so without --case. Live inputs keep [verified].
+    """
+
+    MSG = "no fix can carry"
+
+    def en(self, basis, tag="[verified]"):
+        fixes = [GOOD_FIXES[0].replace("[observed]", tag)] + GOOD_FIXES[1:]
+        return report(fixes, ["Catalog - the only concrete list"], basis=basis)
+
+    def he(self):
+        text = (TESTS / "cases" / "05-he-clear-product-pasted" / "alt-em-dash.md").read_text(encoding="utf-8")
+        self.assertIn("[נצפה]", text)
+        return text
+
+    def flagged(self, text):
+        return any(self.MSG in p for p in hard_of(text))
+
+    def test_screenshot_with_verified_fails_without_a_case(self):
+        text = (TESTS / "cases" / "03-en-dead-controls-screenshot" / "alt-observed-only.md").read_text(encoding="utf-8")
+        self.assertEqual(hard_of(text), [])
+        self.assertTrue(self.flagged(text.replace("1. [observed]", "1. [verified]", 1)))
+
+    def test_pasted_copy_with_verified_fails(self):
+        self.assertTrue(self.flagged(self.en("Basis: pasted copy; not checked: layout, whether anything works")))
+
+    def test_hebrew_screenshot_and_pasted_copy_with_verified_fail(self):
+        text = self.he()
+        self.assertEqual(hard_of(text), [])
+        self.assertTrue(self.flagged(text.replace("[נצפה]", "[נבדק]", 1)))
+        shot = text.replace("[נצפה]", "[נבדק]", 1)
+        basis = next(l for l in shot.splitlines() if l.startswith("בסיס:"))
+        self.assertTrue(self.flagged(shot.replace(basis, "בסיס: צילום מסך; לא נבדק: האם משהו עובד")))
+
+    def test_observed_and_assumed_on_static_inputs_still_pass(self):
+        self.assertFalse(self.flagged(self.en("Basis: screenshot; not checked: whether anything works", "[observed]")))
+        self.assertFalse(self.flagged(self.en("Basis: pasted copy; not checked: whether anything works", "[observed]")))
+
+    def test_live_inputs_keep_verified(self):
+        for basis in ("Basis: live page, interacted; not checked: mobile layout",
+                      "Basis: live page, rendered and clicked; not checked: mobile layout"):
+            self.assertFalse(self.flagged(self.en(basis)), basis)
+
+    def test_live_page_named_in_the_not_checked_clause_does_not_unlock_verified(self):
+        self.assertTrue(self.flagged(self.en("Basis: screenshot; not checked: whether the live page, interacted works")))
+
+    def test_word_verified_in_prose_is_not_a_tag(self):
+        """Only the evidence tag is judged. Textual verification wording stays legitimate on static inputs."""
+        fixes = [
+            "[assumed] Verify that the trial button opens a signup - it is the only action - click it on the live site.",
+            "[observed] The copy says \"verified by 40 teams\" with no names - an unsupported claim reads as filler - name one team or drop it.",
+            "[observed] Verified badge sits beside an unlabeled price - visitors cannot tell what it covers - label it.",
+        ]
+        for basis in ("Basis: screenshot; not checked: whether anything works",
+                      "Basis: pasted copy; not checked: whether anything works"):
+            text = report(fixes, ["Catalog - the only concrete list"], basis=basis)
+            text = text.replace("Line one.", "Wording was checked against the copy and verified as quoted.")
+            self.assertEqual(hard_of(text), [], basis)
+
+    def test_hebrew_prose_with_nivdak_is_not_a_tag(self):
+        text = self.he().replace("[נצפה]", "[נצפה] נבדק מול הטקסט:", 1)
+        self.assertEqual(hard_of(text), [])
+
+    def test_screenshot_plus_a_live_interacted_run_keeps_verified(self):
+        self.assertFalse(self.flagged(self.en("Basis: screenshot and live page, interacted; not checked: mobile layout")))
+
+    def test_stop_output_is_unaffected(self):
+        text = "# Reality Check - x\nBasis: screenshot of a login wall\n\nNot diagnosed: login wall."
+        self.assertFalse(self.flagged(text))
+
+
 class NotCheckedTests(unittest.TestCase):
     """Report B: a report with no 'not checked' clause on the Basis line passed."""
 
