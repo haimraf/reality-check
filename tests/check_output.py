@@ -65,6 +65,24 @@ def names_input(basis, lab, indices=None):
     return False
 
 
+# Inputs where nothing was loaded or clicked in this run: a screenshot and pasted copy.
+# SKILL.md allows [verified] only for what was exercised, so these inputs cannot carry it.
+STATIC_INPUTS = (2, 3)
+
+
+def declares_static_input_only(basis, lab):
+    """True when the basis names a screenshot or pasted copy and no input that was exercised.
+
+    Only the part before the 'not checked' clause counts, so a clause such as
+    "not checked: whether the live page works" does not read as a live input.
+    """
+    variants = "|".join(re.escape(v) for v in lab["not_checked_variants"])
+    head = re.split(rf"(?:{variants})", basis, maxsplit=1, flags=re.I)[0]
+    live = range(len(lab["basis_values"]))
+    live = [i for i in live if i not in STATIC_INPUTS]
+    return names_input(head, lab, STATIC_INPUTS) and not names_input(head, lab, live)
+
+
 def not_checked_clause(basis, lab):
     """True when the basis line says what was not checked, followed by some content."""
     variants = "|".join(re.escape(v) for v in lab["not_checked_variants"])
@@ -217,6 +235,8 @@ def check_output(text, case=None):
 
         if re.search(r"\b\d+\s*/\s*(5|10|100)\b", text) or re.search(r"\bscore:|ציון:", text, re.I):
             hard.append("no module scores")
+        if basis and "verified" in tags_used and declares_static_input_only(basis, lab):
+            hard.append(f"basis names only a static input, so no fix can carry {lab['tags']['verified']}")
         if lab["verdicts"]["no"] == verdict and tags_used and set(tags_used) == {"assumed"}:
             hard.append(f"'{verdict}' cannot rest on assumptions alone")
     info["tags"] = tags_used
